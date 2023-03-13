@@ -18,6 +18,7 @@ public class BoardServiceImpl implements BoardService {
 
     final private BoardRepository boardRepository;
 
+    /*
     @Override
     public void register(BoardRequest boardRequest) {
         Board board = new Board();
@@ -26,6 +27,18 @@ public class BoardServiceImpl implements BoardService {
         board.setContent(boardRequest.getContent());
 
         boardRepository.save(board);
+    }
+     */
+
+    public Board register(BoardRequest boardRequest) {
+        Board board = new Board();
+        board.setTitle(boardRequest.getTitle());
+        board.setWriter(boardRequest.getWriter());
+        board.setContent(boardRequest.getContent());
+
+        boardRepository.save(board);
+
+        return board;
     }
 
     @Override
@@ -67,5 +80,21 @@ public class BoardServiceImpl implements BoardService {
         boardRepository.save(board);
 
         return board;
+    }
+
+    @Override
+    public List<Board> bigMisstake(Long boardId, BoardRequest boardRequest) {
+        return boardRepository.findByBoardIdAndWriter(boardId, boardRequest.getWriter());
+    }
+
+    @Override
+    public Long getCount() {
+        return boardRepository.countBy();
+    }
+
+    @Override
+    public Long getLastEntityId() {
+        Board board = boardRepository.findFirstByOrderByBoardIdDesc();
+        return board.getBoardId();
     }
 }
